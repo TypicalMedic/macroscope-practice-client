@@ -3,16 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ClientSide"
+        xmlns:vm="clr-namespace:ClientSide.ViewModels"
+        xmlns:l="clr-namespace:ClientSide"
         mc:Ignorable="d"
-        Title="Palindrome client" Height="450" Width="584">
+        Title="Palindrome checker" Height="450" Width="584">
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock>status</TextBlock>
+                <TextBlock>
+                    Обработано файлов: 
+                </TextBlock>               
             </StatusBarItem>
             <StatusBarItem>
-                <ProgressBar Width="200" Height="15" Value="34"></ProgressBar>
+                <TextBlock Text="{Binding FilesProcessed}"/>               
             </StatusBarItem>
         </StatusBar>
         <Grid>
@@ -22,12 +28,15 @@
             </Grid.RowDefinitions>
             <DockPanel Grid.Row="0">
                 <Label DockPanel.Dock="Top" Content="Путь к входным данным:"/>
-                <Button DockPanel.Dock="Right" Margin="10,0,10,0" Content="Проверить" VerticalAlignment="Center" Command=""/>
-                <TextBox Margin="5,0,0,0" Text="путь/к/файлам" VerticalAlignment="Center"/>
+                <Button DockPanel.Dock="Right" Margin="10,0,10,0" Content="Проверить" VerticalAlignment="Center" Command="{Binding CheckPalindromeCommand}"/>
+                <TextBox Margin="5,0,0,0" Text="{Binding DirPath, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
             </DockPanel>
             <DockPanel Grid.Row="1">
                 <Label DockPanel.Dock="Top" Content="Результат:"/>
-                <DataGrid d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                <Border BorderBrush="Black" BorderThickness="1" Margin="5,5,5,5">
+                    <TextBlock TextWrapping="Wrap" Text="{Binding Result}" />
+                </Border>
+
             </DockPanel>
 
         </Grid>
