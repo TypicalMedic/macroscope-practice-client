@@ -1,5 +1,6 @@
 ﻿using ClientSide.Models;
 using ClientSide.Services.Interfaces;
+using ClientSide.ViewModels.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ClientSide.Services
 {
-    class PalindromeService(IData data, IPalindromeValidator validator)
+    class PalindromeService(IData data, IPalindromeValidator validator) : IPalindromeService
     {
         private readonly IData _data = data;
         private readonly IPalindromeValidator _validator = validator;
