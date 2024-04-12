@@ -2,6 +2,7 @@
 using ClientSide.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,12 +13,13 @@ namespace ClientSide.Data.FileStorage
     {
         public IEnumerable<string> GetDirFileNames(string directoryName)
         {
-            throw new NotImplementedException();
+            var files = Directory.EnumerateFiles(directoryName, "*.txt", SearchOption.TopDirectoryOnly);
+            foreach (var file in files)
+            {
+                yield return file;
+            }
         }
 
-        public TextFile GetFile(string fileName)
-        {
-            throw new NotImplementedException();
-        }
+        public TextFile GetFile(string fileName) => new TextFile(fileName, File.ReadAllText(fileName));
     }
 }
