@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ClientSide.PalindromeValidator.FromServer
 {
-    class PalindromeValidator : IPalindromeValidator
+    class PalindromeValidatorFromServer : IPalindromeValidator
     {
         public bool IsValid(string value)
         {

@@ -52,18 +52,12 @@ namespace ClientSide.ViewModels
                 _Result += $"\n{file.FileName}: {file.IsPalindrome}";
             }
         }
-        private bool CanCheckPalindromeCommandExecute(object? p)
-        {
-            if (string.IsNullOrEmpty(_DirPath))
-            {
-                return false;
-            }
-            return true;
-        }
+        private bool CanCheckPalindromeCommandExecute(object? p) => !string.IsNullOrEmpty(_DirPath);
         #endregion
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(IPalindromeService palindromeService)
         {
+            _palindromeService= palindromeService;
             CheckPalindromeCommand = new LambdaCommand(OnCheckPalindromeCommandExecuted, CanCheckPalindromeCommandExecute);
         }
     }
