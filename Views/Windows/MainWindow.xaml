@@ -11,17 +11,13 @@
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock>
-                    Статус:
-                </TextBlock>
+                <TextBlock>Статус:</TextBlock>
             </StatusBarItem>
             <StatusBarItem>
                 <TextBlock Text="{Binding StatusText}"/>
             </StatusBarItem>
             <StatusBarItem>
-                <TextBlock>
-                    Обработано файлов:
-                </TextBlock>
+                <TextBlock>Обработано файлов:</TextBlock>
             </StatusBarItem>
             <StatusBarItem>
                 <TextBlock Text="{Binding FilesProcessed}"/>
@@ -42,9 +38,10 @@
             <DockPanel Grid.Row="1">
                 <Label DockPanel.Dock="Top" Content="Результат:"/>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="5,5,5,5">
-                    <TextBlock TextWrapping="Wrap" Text="{Binding Result}" ScrollViewer.CanContentScroll="True"/>
+                    <ScrollViewer>
+                        <TextBlock TextWrapping="Wrap" Text="{Binding Result}" ScrollViewer.CanContentScroll="True"/>
+                    </ScrollViewer>
                 </Border>
-
             </DockPanel>
 
         </Grid>

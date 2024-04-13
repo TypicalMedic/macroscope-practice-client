@@ -10,9 +10,10 @@ using System.Threading.Tasks;
 
 namespace ClientSide.PalindromeValidator.FromServer
 {
-    class PalindromeValidatorFromServer(HttpClient client) : IPalindromeValidator
+    class PalindromeValidatorFromServer(HttpClient client, string url) : IPalindromeValidator
     {
-        private const string url = "http://localhost:5015/palindrome/check";
+        private string serverUrl = url;
+        private const string endpointUrl = "/palindrome/check";
         private readonly HttpClient client = client;
         public bool IsValid(string value)
         {
@@ -20,7 +21,7 @@ namespace ClientSide.PalindromeValidator.FromServer
             string resultText;
             do
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, url)
+                var request = new HttpRequestMessage(HttpMethod.Post, serverUrl + endpointUrl)
                 {
                     Content = JsonContent.Create(value)
                 };
@@ -38,7 +39,7 @@ namespace ClientSide.PalindromeValidator.FromServer
             string resultText;
             do
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, url)
+                var request = new HttpRequestMessage(HttpMethod.Post, serverUrl + endpointUrl)
                 {
                     Content = JsonContent.Create(value)
                 };
