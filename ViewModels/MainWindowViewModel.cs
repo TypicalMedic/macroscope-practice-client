@@ -5,6 +5,7 @@ using ClientSide.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace ClientSide.ViewModels
         }
         private readonly IPalindromeService _palindromeService;
 
-        private string _DirPath = "D:\\input";
+        private string _DirPath = Environment.CurrentDirectory;
 
         /// <summary>Путь к папке, где хранятся текстовые файлы</summary>
         public string DirPath
@@ -79,14 +80,20 @@ namespace ClientSide.ViewModels
 
         private async void OnCheckPalindromeCommandExecuted(object? p)
         {
-            CurrentStatus = Status.inprogress;
+
             Result = "";
             FilesProcessed = 0;
+            if (!Directory.Exists(DirPath))
+            {
+                Result += $"Указанный путь не существует!";
+                return;
+            }
+            CurrentStatus = Status.inprogress;
             Result += $"Запуск...\n\n";
             var files = _palindromeService.CheckFilesForPalindromesAsync(_DirPath).ConfigureAwait(false);
             await foreach (var file in files)
             {
-                Result += $"{file.FileName}: {(file.IsPalindrome ? "Палиндром":"Не палиндром")}\n";
+                Result += $"{file.FileName}: {(file.IsPalindrome ? "Палиндром" : "Не палиндром")}\n";
                 FilesProcessed++;
             }
             Result += $"\nОбработаны все файлы.";
