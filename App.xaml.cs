@@ -23,7 +23,6 @@ namespace ClientSide
     public partial class App : Application
     {
         private static TimeSpan httpHandlerLifetime = TimeSpan.FromMinutes(10);
-        private static TimeSpan requestRetryTimeStart = TimeSpan.FromSeconds(1);
         public static bool IsDesignMode { get; private set; } = true;
         protected override async void OnStartup(StartupEventArgs e)
         {
@@ -65,7 +64,7 @@ namespace ClientSide
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                .WaitAndRetryForeverAsync(attempt => requestRetryTimeStart+TimeSpan.FromSeconds(attempt));
+                .WaitAndRetryForeverAsync(attempt => TimeSpan.FromSeconds(attempt));
         }
     }
 
