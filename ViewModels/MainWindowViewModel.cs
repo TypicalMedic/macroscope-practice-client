@@ -15,7 +15,7 @@ namespace ClientSide.ViewModels
     {
         private readonly IPalindromeService _palindromeService;
 
-        private string _DirPath = "path/to/files/dir";
+        private string _DirPath = "D:\\input";
 
         /// <summary>Путь к папке, где хранятся текстовые файлы</summary>
         public string DirPath
@@ -46,10 +46,13 @@ namespace ClientSide.ViewModels
 
         private void OnCheckPalindromeCommandExecuted(object? p)
         {
+            _Result = "";
+            _FilesProcessed = 0;
             var files = _palindromeService.CheckFilesForPalindromes(_DirPath);
             foreach(var file in files)
             {
-                _Result += $"\n{file.FileName}: {file.IsPalindrome}";
+                Result += $"{file.FileName}: {file.IsPalindrome}\n";
+                FilesProcessed ++;
             }
         }
         private bool CanCheckPalindromeCommandExecute(object? p) => !string.IsNullOrEmpty(_DirPath);
