@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClientSide.ViewModels.Interface
+namespace ClientSide.Services.Interfaces
 {
     interface IPalindromeService
     {
         IEnumerable<TextFile> CheckFilesForPalindromes(string dirName);
+        IAsyncEnumerable<TextFile> CheckFilesForPalindromesAsync(string dirName);
     }
 }

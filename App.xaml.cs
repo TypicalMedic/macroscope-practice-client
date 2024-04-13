@@ -1,13 +1,15 @@
 ﻿using ClientSide.Data.FileStorage;
+using ClientSide.Data.Interfaces;
 using ClientSide.PalindromeValidator.FromServer;
+using ClientSide.PalindromeValidator.Interfaces;
 using ClientSide.Services;
 using ClientSide.Services.Interfaces;
 using ClientSide.ViewModels;
-using ClientSide.ViewModels.Interface;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Configuration;
 using System.Data;
+using System.Net.Http;
 using System.Windows;
 
 namespace ClientSide
@@ -37,10 +39,11 @@ namespace ClientSide
 
         public static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
         {
+            services.AddSingleton<MainWindowViewModel>();
+            services.AddSingleton<HttpClient>();
             services.AddSingleton<IPalindromeService, PalindromeService>();
             services.AddTransient<IData, FileStorage>();
             services.AddTransient<IPalindromeValidator, PalindromeValidatorFromServer>();
-            services.AddSingleton<MainWindowViewModel>();
         }
     }
 
