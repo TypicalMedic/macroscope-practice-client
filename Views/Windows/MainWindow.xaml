@@ -6,7 +6,7 @@
         xmlns:vm="clr-namespace:ClientSide.ViewModels"
         xmlns:l="clr-namespace:ClientSide"
         mc:Ignorable="d"
-        Title="Palindrome checker" Height="450" Width="584"
+        Title="Palindrome checker" Height="450" Width="584" MinHeight="250" MinWidth="250"
         DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}">
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom">
