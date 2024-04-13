@@ -10,50 +10,56 @@ using System.Threading.Tasks;
 
 namespace ClientSide.PalindromeValidator.FromServer
 {
-    class PalindromeValidatorFromServer(HttpClient client, string url) : IPalindromeValidator
+    class PalindromeValidatorFromServer(HttpClient client) : IPalindromeValidator
     {
-        private string serverUrl = url;
         private const string endpointUrl = "/palindrome/check";
         private readonly HttpClient client = client;
         public bool IsValid(string value)
         {
-            bool operationSuccessful;
             string resultText;
-            do
+            var request = new HttpRequestMessage(HttpMethod.Post, endpointUrl)
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, serverUrl + endpointUrl)
-                {
-                    Content = JsonContent.Create(value)
-                };
-                var responce = client.SendAsync(request).Result;
-                operationSuccessful = responce.IsSuccessStatusCode;
-                resultText = responce.Content.ReadAsStringAsync().Result;
-            }
-            while (!operationSuccessful);
+                Content = JsonContent.Create(value)
+            };
+            var responce = client.SendAsync(request).Result;
+            resultText = responce.Content.ReadAsStringAsync().Result;
             bool isPalindrome = bool.Parse(resultText);
             return isPalindrome;
         }
         public async Task<bool> IsValidAsync(string value)
         {
-            bool operationSuccessful;
             string resultText;
-            do
+            var request = new HttpRequestMessage(HttpMethod.Post, endpointUrl)
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, serverUrl + endpointUrl)
-                {
-                    Content = JsonContent.Create(value)
-                };
-                var responce = await client.SendAsync(request).ConfigureAwait(false);
-                resultText = await responce.Content.ReadAsStringAsync().ConfigureAwait(false);
-                operationSuccessful = responce.IsSuccessStatusCode;
-                if (!operationSuccessful)
-                {
-                    await Task.Delay(1000);
-                }
-            }
-            while (!operationSuccessful);
+                Content = JsonContent.Create(value)
+            };
+            var responce = await client.SendAsync(request).ConfigureAwait(false);
+            resultText = await responce.Content.ReadAsStringAsync().ConfigureAwait(false);
             bool isPalindrome = bool.Parse(resultText);
             return isPalindrome;
         }
+
+        //public async Task<bool> IsValidAsync(string value)
+        //{
+        //    bool operationSuccessful;
+        //    string resultText;
+        //    do
+        //    {
+        //        var request = new HttpRequestMessage(HttpMethod.Post, serverUrl + endpointUrl)
+        //        {
+        //            Content = JsonContent.Create(value)
+        //        };
+        //        var responce = await client.SendAsync(request).ConfigureAwait(false);
+        //        resultText = await responce.Content.ReadAsStringAsync().ConfigureAwait(false);
+        //        operationSuccessful = responce.IsSuccessStatusCode;
+        //        if (!operationSuccessful)
+        //        {
+        //            await Task.Delay(1000);
+        //        }
+        //    }
+        //    while (!operationSuccessful);
+        //    bool isPalindrome = bool.Parse(resultText);
+        //    return isPalindrome;
+        //}
     }
 }

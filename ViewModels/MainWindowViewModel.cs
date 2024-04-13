@@ -80,7 +80,6 @@ namespace ClientSide.ViewModels
 
         private async void OnCheckPalindromeCommandExecuted(object? p)
         {
-
             Result = "";
             FilesProcessed = 0;
             if (!Directory.Exists(DirPath))
@@ -89,6 +88,7 @@ namespace ClientSide.ViewModels
                 return;
             }
             CurrentStatus = Status.inprogress;
+            DateTime executionStart = DateTime.Now;
             Result += $"Запуск...\n\n";
             var files = _palindromeService.CheckFilesForPalindromesAsync(_DirPath).ConfigureAwait(false);
             await foreach (var file in files)
@@ -96,8 +96,9 @@ namespace ClientSide.ViewModels
                 Result += $"{file.FileName}: {(file.IsPalindrome ? "Палиндром" : "Не палиндром")}\n";
                 FilesProcessed++;
             }
-            Result += $"\nОбработаны все файлы.";
             CurrentStatus = Status.done;
+            Result += $"\nОбработаны все файлы.";
+            Result += $"\nВремя выполнения: {DateTime.Now - executionStart:hh\\:mm\\:ss}";
         }
         private bool CanCheckPalindromeCommandExecute(object? p) => !string.IsNullOrEmpty(_DirPath) && CurrentStatus != Status.inprogress;
         #endregion
