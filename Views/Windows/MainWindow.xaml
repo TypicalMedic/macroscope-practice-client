@@ -12,27 +12,37 @@
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock>
-                    Обработано файлов: 
-                </TextBlock>               
+                    Статус:
+                </TextBlock>
             </StatusBarItem>
             <StatusBarItem>
-                <TextBlock Text="{Binding FilesProcessed}"/>               
+                <TextBlock Text="{Binding StatusText}"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock>
+                    Обработано файлов:
+                </TextBlock>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding FilesProcessed}"/>
             </StatusBarItem>
         </StatusBar>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="25*"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="181*"/>
             </Grid.RowDefinitions>
             <DockPanel Grid.Row="0">
                 <Label DockPanel.Dock="Top" Content="Путь к входным данным:"/>
-                <Button DockPanel.Dock="Right" Margin="10,0,10,0" Content="Проверить" VerticalAlignment="Center" Command="{Binding CheckPalindromeCommand}"/>
-                <TextBox Margin="5,0,0,0" Text="{Binding DirPath, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+                <DockPanel DockPanel.Dock="Bottom" >
+                    <Button DockPanel.Dock="Right" Margin="10,0,10,0" Content="Проверить" VerticalAlignment="Center" Command="{Binding CheckPalindromeCommand}"/>
+                    <TextBox Margin="5,0,0,0" Text="{Binding DirPath, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+                </DockPanel>
             </DockPanel>
             <DockPanel Grid.Row="1">
                 <Label DockPanel.Dock="Top" Content="Результат:"/>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="5,5,5,5">
-                    <TextBlock TextWrapping="Wrap" Text="{Binding Result}" />
+                    <TextBlock TextWrapping="Wrap" Text="{Binding Result}" ScrollViewer.CanContentScroll="True"/>
                 </Border>
 
             </DockPanel>

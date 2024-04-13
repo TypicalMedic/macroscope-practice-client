@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClientSide.Services.Interfaces
+namespace ClientSide.PalindromeValidator.Interfaces
 {
     interface IPalindromeValidator
     {
         bool IsValid(string value);
+        Task<bool> IsValidAsync(string value);
     }
 }

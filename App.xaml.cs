@@ -1,9 +1,10 @@
 ﻿using ClientSide.Data.FileStorage;
+using ClientSide.Data.Interfaces;
 using ClientSide.PalindromeValidator.FromServer;
+using ClientSide.PalindromeValidator.Interfaces;
 using ClientSide.Services;
 using ClientSide.Services.Interfaces;
 using ClientSide.ViewModels;
-using ClientSide.ViewModels.Interface;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Configuration;

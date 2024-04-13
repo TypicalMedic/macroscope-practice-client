@@ -1,9 +1,10 @@
 ﻿using ClientSide.Infrastructure.Commands;
 using ClientSide.Models;
+using ClientSide.Services.Interfaces;
 using ClientSide.ViewModels.Base;
-using ClientSide.ViewModels.Interface;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,8 +12,31 @@ using System.Windows.Input;
 
 namespace ClientSide.ViewModels
 {
+
+    enum Status
+    {
+        notstarted, inprogress, done
+    }
     class MainWindowViewModel : ViewModel
     {
+        private static Dictionary<Status, string> StringStatus = new Dictionary<Status, string>()
+        {
+            { Status.notstarted, "готово к работе" },
+            { Status.inprogress, "выполнение..." },
+            { Status.done, "завершено" },
+        };
+
+        private Status _CurrentStatus;
+
+        private Status CurrentStatus
+        {
+            get => _CurrentStatus;
+            set
+            {
+                _CurrentStatus = value;
+                StatusText = StringStatus[value];
+            }
+        }
         private readonly IPalindromeService _palindromeService;
 
         private string _DirPath = "D:\\input";
@@ -33,6 +57,15 @@ namespace ClientSide.ViewModels
             set => Set(ref _Result, value);
         }
 
+        private string _StatusText = "готов к работе";
+
+        /// <summary>Статус выполнения</summary>
+        public string StatusText
+        {
+            get => _StatusText;
+            set => Set(ref _StatusText, value);
+        }
+
         private int _FilesProcessed = 0;
 
         /// <summary>Количество обработанных файлов</summary>
@@ -44,23 +77,28 @@ namespace ClientSide.ViewModels
         #region CheckPalindromeCommand
         public ICommand CheckPalindromeCommand { get; }
 
-        private void OnCheckPalindromeCommandExecuted(object? p)
+        private async void OnCheckPalindromeCommandExecuted(object? p)
         {
-            _Result = "";
-            _FilesProcessed = 0;
-            var files = _palindromeService.CheckFilesForPalindromes(_DirPath);
-            foreach(var file in files)
+            CurrentStatus = Status.inprogress;
+            Result = "";
+            FilesProcessed = 0;
+            Result += $"Запуск...\n\n";
+            var files = _palindromeService.CheckFilesForPalindromesAsync(_DirPath).ConfigureAwait(false);
+            await foreach (var file in files)
             {
-                Result += $"{file.FileName}: {file.IsPalindrome}\n";
-                FilesProcessed ++;
+                Result += $"{file.FileName}: {(file.IsPalindrome ? "Палиндром":"Не палиндром")}\n";
+                FilesProcessed++;
             }
+            Result += $"\nОбработаны все файлы.";
+            CurrentStatus = Status.done;
         }
-        private bool CanCheckPalindromeCommandExecute(object? p) => !string.IsNullOrEmpty(_DirPath);
+        private bool CanCheckPalindromeCommandExecute(object? p) => !string.IsNullOrEmpty(_DirPath) && CurrentStatus != Status.inprogress;
         #endregion
 
         public MainWindowViewModel(IPalindromeService palindromeService)
         {
-            _palindromeService= palindromeService;
+            CurrentStatus = Status.notstarted;
+            _palindromeService = palindromeService;
             CheckPalindromeCommand = new LambdaCommand(OnCheckPalindromeCommandExecuted, CanCheckPalindromeCommandExecute);
         }
     }
