@@ -2,11 +2,6 @@
 using ClientSide.Models;
 using ClientSide.PalindromeValidator.Interfaces;
 using ClientSide.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClientSide.Services
 {
@@ -19,9 +14,12 @@ namespace ClientSide.Services
             var textFiles = _data.GetDirFileNames(dirName);
             foreach (var txtFile in textFiles)
             {
-                TextFile file = _data.GetFile(txtFile);
-                bool isPalindrome = _validator.IsValid(file.Text);
-                file.IsPalindrome = isPalindrome;
+                TextFile? file = _data.GetFile(txtFile);
+                if (file == null)
+                {
+                    continue;
+                }
+                file.IsPalindrome = _validator.IsValid(file.Text);
                 yield return file;
             }
         }
@@ -30,22 +28,32 @@ namespace ClientSide.Services
             var textFiles = _data.GetDirFileNames(dirName);
             var tasks = ArrangeTasks(textFiles);
 
-            foreach (Task<TextFile> task in tasks)
+            foreach (Task<TextFile?> task in tasks)
             {
-                yield return await task;
+                var result = await task;
+                if (result == null)
+                {
+                    continue;
+                }
+                yield return result;
             }
         }
-        private List<Task<TextFile>> ArrangeTasks(IEnumerable<string> textFiles)
+        private List<Task<TextFile?>> ArrangeTasks(IEnumerable<string> textFiles)
         {
-            List<Task<TextFile>> result = new();
+            List<Task<TextFile?>> result = new();
             foreach (var txtFile in textFiles)
             {
-                result.Add(Task.Run(async () =>
+                Task<TextFile?> task = Task.Run(async () =>
                 {
-                    TextFile file = await _data.GetFileAsync(txtFile).ConfigureAwait(false);
+                    TextFile? file = await _data.GetFileAsync(txtFile).ConfigureAwait(false);
+                    if (file == null)
+                    {
+                        return null;
+                    }
                     file.IsPalindrome = await _validator.IsValidAsync(file.Text).ConfigureAwait(false);
                     return file;
-                }));
+                });
+                result.Add(task);
             }
             return result;
         }

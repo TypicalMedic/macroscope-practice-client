@@ -1,14 +1,8 @@
 ﻿using ClientSide.Infrastructure.Commands;
-using ClientSide.Models;
 using ClientSide.Services.Interfaces;
 using ClientSide.ViewModels.Base;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ClientSide.ViewModels
@@ -84,20 +78,27 @@ namespace ClientSide.ViewModels
             FilesProcessed = 0;
             if (!Directory.Exists(DirPath))
             {
-                Result += $"Указанный путь не существует!";
+                MessageBox.Show("Указанный путь не существует!", "Ошибка");
                 return;
             }
             CurrentStatus = Status.inprogress;
             DateTime executionStart = DateTime.Now;
             Result += $"Запуск...\n\n";
-            var files = _palindromeService.CheckFilesForPalindromesAsync(_DirPath).ConfigureAwait(false);
-            await foreach (var file in files)
+            try
             {
-                Result += $"{file.FileName}: {(file.IsPalindrome ? "Палиндром" : "Не палиндром")}\n";
-                FilesProcessed++;
+                var files = _palindromeService.CheckFilesForPalindromesAsync(_DirPath).ConfigureAwait(false);
+                await foreach (var file in files)
+                {
+                    Result += $"{file.FileName}: {(file.IsPalindrome ? "Палиндром" : "Не палиндром")}\n";
+                    FilesProcessed++;
+                }
+                Result += $"\nОбработаны все файлы.";
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Ошибка: {e.Message}. При повторении обратитесь в поддержку.");
             }
             CurrentStatus = Status.done;
-            Result += $"\nОбработаны все файлы.";
             Result += $"\nВремя выполнения: {DateTime.Now - executionStart:hh\\:mm\\:ss}";
         }
         private bool CanCheckPalindromeCommandExecute(object? p) => !string.IsNullOrEmpty(_DirPath) && CurrentStatus != Status.inprogress;
