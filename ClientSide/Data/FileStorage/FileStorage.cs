@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace ClientSide.Data.FileStorage
 {
-    class FileStorage : IData
+    public partial class FileStorage : IData
     {
         public IEnumerable<string> GetDirFileNames(string directoryName)
         {

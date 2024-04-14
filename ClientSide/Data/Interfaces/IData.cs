@@ -2,7 +2,7 @@
 
 namespace ClientSide.Data.Interfaces
 {
-    interface IData
+    public interface IData
     {
         TextFile? GetFile(string fileName);
         Task<TextFile?> GetFileAsync(string fileName);

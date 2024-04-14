@@ -5,7 +5,7 @@ using ClientSide.Services.Interfaces;
 
 namespace ClientSide.Services
 {
-    class PalindromeService(IData data, IPalindromeValidator validator) : IPalindromeService
+    public partial class PalindromeService(IData data, IPalindromeValidator validator) : IPalindromeService
     {
         private readonly IData _data = data;
         private readonly IPalindromeValidator _validator = validator;
@@ -40,7 +40,7 @@ namespace ClientSide.Services
         }
         private List<Task<TextFile?>> ArrangeTasks(IEnumerable<string> textFiles)
         {
-            List<Task<TextFile?>> result = new();
+            List<Task<TextFile?>> result = [];
             foreach (var txtFile in textFiles)
             {
                 Task<TextFile?> task = Task.Run(async () =>

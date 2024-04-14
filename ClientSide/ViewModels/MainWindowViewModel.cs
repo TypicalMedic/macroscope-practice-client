@@ -14,7 +14,7 @@ namespace ClientSide.ViewModels
     }
     class MainWindowViewModel : ViewModel
     {
-        private static Dictionary<Status, string> StringStatus = new Dictionary<Status, string>()
+        private static readonly Dictionary<Status, string> StringStatus = new()
         {
             { Status.notstarted, "готово к работе" },
             { Status.inprogress, "выполнение..." },
