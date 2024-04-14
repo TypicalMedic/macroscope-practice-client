@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 
 namespace ClientSide.PalindromeValidator.FromServer
 {
-    class PalindromeValidatorFromServer(HttpClient client) : IPalindromeValidator
+    public partial class PalindromeValidatorFromServer(HttpClient client) : IPalindromeValidator
     {
         private const string endpointUrl = "/palindrome/check";
         private readonly HttpClient client = client;

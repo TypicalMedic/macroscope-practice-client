@@ -50,15 +50,19 @@ namespace ClientSide
                 MessageBox.Show("Ошибка запуска приложения: параметр server_url не установлен.", "Ошибка");
                 Environment.Exit(1);
             }
-            services.AddHttpClient<IPalindromeValidator, PalindromeValidatorFromServer>()
-                .ConfigureHttpClient(client => client.BaseAddress = new Uri(serverUrl))
-                .SetHandlerLifetime(HttpHandlerLifetime)
-                .AddPolicyHandler(GetRetryPolicy());
+            SetupHttpclient(services, serverUrl);            
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<IPalindromeService, PalindromeService>();
             services.AddTransient<IData, FileStorage>();
         }
-        private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        public static void SetupHttpclient(IServiceCollection services, string serverUrl)
+        {
+            services.AddHttpClient<IPalindromeValidator, PalindromeValidatorFromServer>()
+                .ConfigureHttpClient(client => client.BaseAddress = new Uri(serverUrl))
+                .SetHandlerLifetime(HttpHandlerLifetime)
+                .AddPolicyHandler(GetRetryPolicy());
+        }
+        public static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
         {
             return HttpPolicyExtensions
                 .HandleTransientHttpError()

@@ -1,6 +1,6 @@
 ﻿namespace ClientSide.PalindromeValidator.Interfaces
 {
-    interface IPalindromeValidator
+    public interface IPalindromeValidator
     {
         bool IsValid(string value);
         Task<bool> IsValidAsync(string value);
