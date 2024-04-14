@@ -7,13 +7,11 @@ using ClientSide.Services.Interfaces;
 using ClientSide.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Polly.Extensions.Http;
 using Polly;
+using Polly.Extensions.Http;
 using System.Configuration;
-using System.Data;
 using System.Net.Http;
 using System.Windows;
-using Polly.Contrib.WaitAndRetry;
 
 namespace ClientSide
 {
@@ -22,7 +20,8 @@ namespace ClientSide
     /// </summary>
     public partial class App : Application
     {
-        private static TimeSpan httpHandlerLifetime = TimeSpan.FromMinutes(10);
+        private static int MaxRetries = 30;
+        private static TimeSpan HttpHandlerLifetime = TimeSpan.FromMinutes(10);
         public static bool IsDesignMode { get; private set; } = true;
         protected override async void OnStartup(StartupEventArgs e)
         {
@@ -53,7 +52,7 @@ namespace ClientSide
             }
             services.AddHttpClient<IPalindromeValidator, PalindromeValidatorFromServer>()
                 .ConfigureHttpClient(client => client.BaseAddress = new Uri(serverUrl))
-                .SetHandlerLifetime(httpHandlerLifetime)
+                .SetHandlerLifetime(HttpHandlerLifetime)
                 .AddPolicyHandler(GetRetryPolicy());
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<IPalindromeService, PalindromeService>();
@@ -63,8 +62,7 @@ namespace ClientSide
         {
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
-                .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
-                .WaitAndRetryForeverAsync(attempt => TimeSpan.FromSeconds(attempt));
+                .WaitAndRetryAsync(MaxRetries, attempt => TimeSpan.FromSeconds(attempt ^ 2));
         }
     }
 
